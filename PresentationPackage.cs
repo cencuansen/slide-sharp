@@ -81,7 +81,6 @@ namespace SlideSharp
         {
             if (disposing)
             {
-                //DataBag = null;
                 _slides = null;
                 _masterSlides = null;
             }

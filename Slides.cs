@@ -285,7 +285,6 @@ namespace SlideSharp
         public Slides Create(int targetIndex)
         {
             Index = targetIndex;
-            string cSldXml = @$"<p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=""1"" name="""" /><p:cNvGrpSpPr /><p:nvPr /></p:nvGrpSpPr><p:grpSpPr/></p:spTree></p:cSld>";
 
             SlidePart slidePart = _ppt.Document.PresentationPart.AddNewPart<SlidePart>();
             // 获取第一个母板(SlideMasterPart)
@@ -297,9 +296,19 @@ namespace SlideSharp
             slidePart.AddPart(slideLayoutPart, firstSlideLayoutId.RelationshipId);
 
             slidePart.Slide = new Slide();
-            slidePart.Slide.Append(new CommonSlideData(SlideUtils.ParseXml(cSldXml)));
+            slidePart.Slide.Append(new CommonSlideData(CommonSlideDataXml()));
             Insert(slidePart, targetIndex);
             return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private string CommonSlideDataXml()
+        {
+            string xml = @$"<p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id=""1"" name="""" /><p:cNvGrpSpPr /><p:nvPr /></p:nvGrpSpPr><p:grpSpPr/></p:spTree></p:cSld>";
+            return SlideUtils.ParseXml(xml);
         }
 
         /// <summary>

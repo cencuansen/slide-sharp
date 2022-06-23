@@ -168,7 +168,6 @@ namespace SlideSharp
             });
             #endregion
 
-
             #region 饼图主体区
             var pie = new PieChart(
                 new PieChartSeries(
@@ -205,15 +204,14 @@ namespace SlideSharp
             #endregion
 
             ChartPart newChartPart = slidePart.AddNewPart<ChartPart>(chartReferenceId);
-            newChartPart.ChartSpace = new ChartSpace(new C.Chart(new Title(GetTitleXml()), new C.PlotArea(new Layout(), pie), legend));
+            newChartPart.ChartSpace = new ChartSpace(new C.Chart(new Title(ChartTitleXml()), new C.PlotArea(new Layout(), pie), legend));
             slidePart.Slide.Save();
         }
 
-        private string GetTitleXml()
+        private string ChartTitleXml()
         {
-            string titleXml = @$"<c:title xmlns:c=""http://schemas.openxmlformats.org/drawingml/2006/chart""><c:tx><c:rich><a:bodyPr rot=""0"" spcFirstLastPara=""0"" vertOverflow=""ellipsis"" vert=""horz"" wrap=""square"" anchor=""ctr"" anchorCtr=""1"" xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:lstStyle xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:p xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main""><a:pPr defTabSz=""914400""><a:defRPr lang=""zh-CN"" sz=""1400"" b=""0"" i=""0"" u=""none"" strike=""noStrike"" kern=""1200"" spc=""0"" baseline=""0""><a:solidFill><a:schemeClr val=""tx1""><a:lumMod val=""65000"" /><a:lumOff val=""35000"" /></a:schemeClr></a:solidFill><a:latin typeface=""+mn-lt"" /><a:ea typeface=""+mn-ea"" /><a:cs typeface=""+mn-cs"" /></a:defRPr></a:pPr><a:r><a:rPr lang=""zh-CN"" altLang=""en-US"" /><a:t>{Title}</a:t></a:r></a:p></c:rich></c:tx><c:layout /><c:overlay val=""0"" /><c:spPr><a:noFill xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:ln xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main""><a:noFill /></a:ln><a:effectLst xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /></c:spPr></c:title>";
-            var res = SlideUtils.ParseXml(titleXml);
-            return res;
+            string xml = @$"<c:title xmlns:c=""http://schemas.openxmlformats.org/drawingml/2006/chart""><c:tx><c:rich><a:bodyPr rot=""0"" spcFirstLastPara=""0"" vertOverflow=""ellipsis"" vert=""horz"" wrap=""square"" anchor=""ctr"" anchorCtr=""1"" xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:lstStyle xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:p xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main""><a:pPr defTabSz=""914400""><a:defRPr lang=""zh-CN"" sz=""1400"" b=""0"" i=""0"" u=""none"" strike=""noStrike"" kern=""1200"" spc=""0"" baseline=""0""><a:solidFill><a:schemeClr val=""tx1""><a:lumMod val=""65000"" /><a:lumOff val=""35000"" /></a:schemeClr></a:solidFill><a:latin typeface=""+mn-lt"" /><a:ea typeface=""+mn-ea"" /><a:cs typeface=""+mn-cs"" /></a:defRPr></a:pPr><a:r><a:rPr lang=""zh-CN"" altLang=""en-US"" /><a:t>{Title}</a:t></a:r></a:p></c:rich></c:tx><c:layout /><c:overlay val=""0"" /><c:spPr><a:noFill xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /><a:ln xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main""><a:noFill /></a:ln><a:effectLst xmlns:a=""http://schemas.openxmlformats.org/drawingml/2006/main"" /></c:spPr></c:title>";
+            return SlideUtils.ParseXml(xml);
         }
     }
 }

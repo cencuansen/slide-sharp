@@ -77,17 +77,15 @@ namespace SlideSharp
         {
             try
             {
-                // pic节点文本
-                string pictureXml = PictureXml(x, y, width, height);
-                var pic = new Picture(SlideUtils.ParseXml(pictureXml));
+                var pic = new Picture(PictureXml(x, y, width, height));
 
                 Slide slide = _slides.SlidePart.Slide;
-                slide.CommonSlideData.ShapeTree.Append(pic);
-                ImagePart imagePart = slide.SlidePart.AddImagePart(ImagePartType.Jpeg);
+                slide.CommonSlideData!.ShapeTree!.Append(pic);
+                ImagePart imagePart = slide.SlidePart!.AddImagePart(ImagePartType.Jpeg);
                 imagePart.FeedData(stream);
 
                 // pic节点关联图片数据
-                pic.BlipFill.Blip.Embed = slide.SlidePart.GetIdOfPart(imagePart);
+                pic.BlipFill!.Blip!.Embed = slide.SlidePart.GetIdOfPart(imagePart);
 
                 stream.Dispose();
             }
@@ -102,7 +100,8 @@ namespace SlideSharp
         /// <returns></returns>
         private string PictureXml(long x, long y, long width, long height)
         {
-            return $@"<p:pic><p:nvPicPr><p:cNvPr id=""{_slides.PictureId++}"" name=""image{_slides.PictureId++}""/><p:cNvPicPr><p:picLocks noChangeAspect=""1"" /></p:cNvPicPr ><p:nvPr /></p:nvPicPr><p:blipFill><a:blip r:embed=""rId{_slides.PictureId++}"" /><a:stretch><a:fillRect /></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x=""{SlideUtils.Pixel2EMU(x)}"" y=""{SlideUtils.Pixel2EMU(y)}"" /><a:ext cx=""{SlideUtils.Pixel2EMU(width)}"" cy=""{SlideUtils.Pixel2EMU(height)}"" /></a:xfrm><a:prstGeom prst=""rect""><a:avLst /></a:prstGeom ><a:ln w=""12700"" cmpd=""sng""><a:solidFill><a:schemeClr val=""bg1""><a:lumMod val=""85000"" /></a:schemeClr></a:solidFill><a:prstDash val=""solid"" /></a:ln></p:spPr></p:pic>";
+            var xml = $@"<p:pic><p:nvPicPr><p:cNvPr id=""{_slides.PictureId++}"" name=""image{_slides.PictureId++}""/><p:cNvPicPr><p:picLocks noChangeAspect=""1"" /></p:cNvPicPr ><p:nvPr /></p:nvPicPr><p:blipFill><a:blip r:embed=""rId{_slides.PictureId++}"" /><a:stretch><a:fillRect /></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x=""{SlideUtils.Pixel2EMU(x)}"" y=""{SlideUtils.Pixel2EMU(y)}"" /><a:ext cx=""{SlideUtils.Pixel2EMU(width)}"" cy=""{SlideUtils.Pixel2EMU(height)}"" /></a:xfrm><a:prstGeom prst=""rect""><a:avLst /></a:prstGeom ><a:ln w=""12700"" cmpd=""sng""><a:solidFill><a:schemeClr val=""bg1""><a:lumMod val=""85000"" /></a:schemeClr></a:solidFill><a:prstDash val=""solid"" /></a:ln></p:spPr></p:pic>";
+            return SlideUtils.ParseXml(xml);
         }
 
         /// <summary>
@@ -123,13 +122,20 @@ namespace SlideSharp
         /// <param name="stream"></param>
         /// <param name="outStream"></param>
         /// <returns></returns>
-        private (long width, long height) GetSize(Stream stream, out Stream outStream)
+        private (long width, long height) GetSize(Stream? stream, out Stream? outStream)
         {
             long innerWidth = 0, innerHeight = 0;
+            outStream = null;
+
+            if (null == stream)
+            {
+                return (innerWidth, innerHeight);
+            }
+
             try
             {
                 using Bitmap img = Image.FromStream(stream) as Bitmap;
-                innerWidth = img.Width;
+                innerWidth = img!.Width;
                 innerHeight = img.Height;
                 MemoryStream ms = new();
                 img.Save(ms, ImageFormat.Png);
@@ -201,7 +207,7 @@ namespace SlideSharp
                 return;
             }
             var shape = _slides.SlidePart.Slide.Descendants<Shape>().FirstOrDefault(x => x.InnerText.Contains(keyword));
-            var transform = shape.ShapeProperties.Transform2D;
+            var transform = shape.ShapeProperties!.Transform2D;
             long pX = SlideUtils.EMU2Pixel(transform.Offset.X);
             long pY = SlideUtils.EMU2Pixel(transform.Offset.Y);
             long shapeWidth = SlideUtils.EMU2Pixel(transform.Extents.Cx) - 2;

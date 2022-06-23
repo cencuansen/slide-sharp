@@ -197,8 +197,22 @@ namespace SlideSharp
             }
 
             _slides.TableId = Math.Max(tableData.Idx, _slides.TableId);
-            Title = $"{tableData.Title}{_slides.TableId}";
 
+            var gf = new P.GraphicFrame(GraphicFrameXml(_slides, tableData));
+            SlidePart slidePart = _slides.SlidePart;
+            var graphicFrame = slidePart.Slide.CommonSlideData.ShapeTree.AppendChild(gf);
+            slidePart.Slide.Save();
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slides"></param>
+        /// <param name="tableData"></param>
+        /// <returns></returns>
+        private string GraphicFrameXml(Slides slides, TableData tableData)
+        {
             // 影响列
             var gridCol = Enumerable.Range(0, tableData.ColumnsWidth.Count()).Select(columnIndex => $@"<a:gridCol w = ""{SlideUtils.Pixel2EMU(tableData.ColumnsWidth.ToList()[columnIndex])}"" />").StringJoin();
             var tr = Enumerable.Range(0, tableData.RowsHeight.Count()).Select(rowIndex => $@"<a:tr h = ""{SlideUtils.Pixel2EMU(tableData.RowsHeight.ToArray()[rowIndex])}"">
@@ -242,9 +256,11 @@ namespace SlideSharp
                       </a:tc>").StringJoin()} 
                     </a:tr>").StringJoin();
 
-            var graphicFrameXml = $@"<p:graphicFrame>
+            Title = $"{tableData.Title}{slides.TableId}";
+
+            var xml = $@"<p:graphicFrame>
                   <p:nvGraphicFramePr>
-                    <p:cNvPr id = ""{_slides.TableId++}"" name=""{Title}"" title=""{Title}""/>
+                    <p:cNvPr id = ""{slides.TableId++}"" name=""{Title}"" title=""{Title}""/>
                     <p:cNvGraphicFramePr />
                     <p:nvPr />
                   </p:nvGraphicFramePr>
@@ -267,12 +283,7 @@ namespace SlideSharp
                   </a:graphic>
                 </p:graphicFrame>";
 
-            var parsedXml = SlideUtils.ParseXml(graphicFrameXml);
-            var gf = new P.GraphicFrame(parsedXml);
-            SlidePart slidePart = _slides.SlidePart;
-            var graphicFrame = slidePart.Slide.CommonSlideData.ShapeTree.AppendChild(gf);
-            slidePart.Slide.Save();
-            return this;
+            return SlideUtils.ParseXml(xml);
         }
 
         /// <summary>
