@@ -1,2 +1,2 @@
 # slide sharp
-a simppt processing tool.
+a simple ppt processing tool.
